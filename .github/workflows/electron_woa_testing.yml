@@ -14,6 +14,9 @@ jobs:
     runs-on: [self-hosted, woa]
 
     steps:
+    - uses: ouzi-dev/commit-status-updater@v1.1.0
+      with:
+        name: "electron-woa-testing"
     - name: Clean Workspace
       run: |
         if (Test-Path src) {
@@ -132,3 +135,8 @@ jobs:
         Remove-Item -path $env:APPDATA/Electron* -Recurse -Force -ErrorAction Ignore
       if:  ${{ always() }}
       shell: powershell
+    - if: always()
+      uses: ouzi-dev/commit-status-updater@v1.1.0
+      with:
+        name: "electron-woa-testing"
+        status: "${{ job.status }}"
