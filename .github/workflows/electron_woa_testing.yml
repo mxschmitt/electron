@@ -13,6 +13,10 @@ jobs:
 
     runs-on: [self-hosted, woa]
 
+    permissions:
+      checks: write
+      pull-requests: write
+
     steps:
     - uses: ouzi-dev/commit-status-updater@v1.1.0
       with:
@@ -118,7 +122,8 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action/composite@v1
       if:  ${{ always() }}
       with:
-        files: "src/junit/**/*.xml"      
+        files: "src/junit/**/*.xml"
+        check_name: "electron-woa-testing"
     - name: Verify ffmpeg
       run: |
         cd src
@@ -135,8 +140,3 @@ jobs:
         Remove-Item -path $env:APPDATA/Electron* -Recurse -Force -ErrorAction Ignore
       if:  ${{ always() }}
       shell: powershell
-    - if: always()
-      uses: ouzi-dev/commit-status-updater@v1.1.0
-      with:
-        name: "electron-woa-testing"
-        status: "${{ job.status }}"
