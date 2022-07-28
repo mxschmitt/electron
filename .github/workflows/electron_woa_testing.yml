@@ -18,19 +18,15 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: ouzi-dev/commit-status-updater@v1.1.0
-      with:
-        name: "electron-woa-testing"
     - name: Clean Workspace
       run: |
-        if (Test-Path src) {
-          Remove-Item src -Recurse -Force
-        }
+        Remove-Item * -Recurse -Force
       shell: powershell
     - name: Checkout 
       uses: actions/checkout@v3
       with:
         path: src\electron
+        fetch-depth: 0
     - name: Yarn install
       run: |
         cd src\electron
@@ -117,6 +113,7 @@ jobs:
         ELECTRON_TEST_RESULTS_DIR: junit
         MOCHA_MULTI_REPORTERS: 'mocha-junit-reporter, tap'
         MOCHA_REPORTER: mocha-multi-reporters
+        ELECTRON_SKIP_NATIVE_MODULE_TESTS: true
       if: ${{ always() }}
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action/composite@v1
